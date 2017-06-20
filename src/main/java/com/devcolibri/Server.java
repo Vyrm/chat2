@@ -5,8 +5,8 @@ import java.net.ServerSocket;
 import java.net.Socket;
 
 public class Server {
-    ServerSocket serverSocket;
-    Socket socket;
+    private ServerSocket serverSocket;
+    private Socket socket;
 
     public void run() {
         try {
@@ -14,7 +14,12 @@ public class Server {
             serverSocket = new ServerSocket(8081);
             while (true) {
                 socket = serverSocket.accept();
-                Worker worker = new Worker(socket);
+                Worker worker = null;
+                try {
+                    worker = new Worker(socket);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
                 new Thread(worker).start();
             }
         } catch (IOException e) {

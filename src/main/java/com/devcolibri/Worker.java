@@ -12,14 +12,10 @@ public class Worker implements Runnable {
     private PrintWriter pw;
     private boolean userAvailable;
 
-    public Worker(Socket sck) {
+    public Worker(Socket sck) throws IOException {
         this.socket = sck;
-        try {
             bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             pw = new PrintWriter(socket.getOutputStream(), true);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
     }
 
     public void run() {
