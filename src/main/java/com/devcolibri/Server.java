@@ -8,7 +8,7 @@ public class Server {
     ServerSocket serverSocket;
     Socket socket;
 
-    public void run(){
+    public void run() {
         try {
             System.out.println("Server is working!");
             serverSocket = new ServerSocket(8081);
