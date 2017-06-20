@@ -22,7 +22,7 @@ public class Worker implements Runnable {
     }
 
     public void run() {
-        pw.println("Welcome to chat");
+        pw.println("Welcome to chat!");
         while (true) {
             try {
                 String msg = bf.readLine();

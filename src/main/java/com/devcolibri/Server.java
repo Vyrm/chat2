@@ -10,7 +10,7 @@ public class Server {
 
     public void run(){
         try {
-            System.out.println("Server is working");
+            System.out.println("Server is working!");
             serverSocket = new ServerSocket(8081);
             while (true) {
                 socket = serverSocket.accept();
