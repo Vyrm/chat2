@@ -14,8 +14,8 @@ public class Worker implements Runnable {
 
     public Worker(Socket sck) throws IOException {
         this.socket = sck;
-            bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            pw = new PrintWriter(socket.getOutputStream(), true);
+        bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+        pw = new PrintWriter(socket.getOutputStream(), true);
     }
 
     public void run() {
@@ -39,5 +39,7 @@ public class Worker implements Runnable {
         System.out.println("The client left the chat");
         userAvailable = false;
         socket.close();
+        bf.close();
+        pw.close();
     }
 }
