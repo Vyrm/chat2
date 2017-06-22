@@ -6,10 +6,10 @@ import java.util.Map;
 
 public class UserHandler {
     private static volatile UserHandler userHandler;
-    private static Map<Socket, User> clients;
+    private static Map<String, User> clients;
 
     private UserHandler() {
-        clients = new HashMap<Socket, User>();
+        clients = new HashMap<String, User>();
     }
 
     public static UserHandler getInstance() {
@@ -24,7 +24,7 @@ public class UserHandler {
         return userHandler;
     }
 
-    public Map<Socket, User> getMap() {
+    public Map<String, User> getMap() {
         return clients;
     }
 }
