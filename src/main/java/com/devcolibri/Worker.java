@@ -22,10 +22,9 @@ public class Worker implements Runnable {
 
     public void run() {
         pw.println("Welcome to chat, enter your nickname!");
-        while (userAvailable) {
-            String nickname = getMessage();
-            break;
-        }
+        String nickname = getMessage();
+        System.out.println("New nickname: " + nickname);
+
         while (userAvailable) {
             String msg = getMessage();
             if (msg == null || msg.equals("/exit")) {
