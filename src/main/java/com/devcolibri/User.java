@@ -15,6 +15,10 @@ public class User {
         return nickname;
     }
 
+    public Socket getSocket() {
+        return socket;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
