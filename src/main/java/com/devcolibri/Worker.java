@@ -24,21 +24,7 @@ public class Worker implements Runnable {
         pw.println("Welcome to chat, enter your nickname!");
         while (userAvailable) {
             String nickname = getMessage();
-            if (nickname == null || nickname.equals("/exit")) {
-                exit();
-            }
-            if (UserHandler.getInstance().getMap().isEmpty()) {
-                UserHandler.getInstance().getMap().put(socket, new User(nickname));
-            } else {
-                for (Map.Entry<Socket, User> entry : UserHandler.getInstance().getMap().entrySet()) {
-                    if (entry.getValue().equals(new User(nickname))) { //TODO
-                        pw.println("This user is already exist, choose another");
-                    } else {
-                        UserHandler.getInstance().getMap().put(socket, new User(nickname));
-                        userAvailable = false;
-                    }
-                }
-            }
+            break;
         }
         while (userAvailable) {
             String msg = getMessage();
@@ -55,7 +41,7 @@ public class Worker implements Runnable {
         try {
             message = bf.readLine();
         } catch (IOException e) {
-            e.printStackTrace();
+            exit();
         }
         return message;
     }
