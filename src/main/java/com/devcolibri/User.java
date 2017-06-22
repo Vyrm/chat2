@@ -14,9 +14,7 @@ public class User {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-
         User user = (User) o;
-
         return nickname != null ? nickname.equals(user.nickname) : user.nickname == null;
     }
 
