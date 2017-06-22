@@ -17,14 +17,29 @@ public class Worker implements Runnable {
         this.socket = sck;
         bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         pw = new PrintWriter(socket.getOutputStream(), true);
-        userAvailable = true;
+        userAvailable = false;
     }
 
     public void run() {
         pw.println("Welcome to chat, enter your nickname!");
-        String nickname = getMessage();
-        System.out.println("New nickname: " + nickname);
-
+        while (!userAvailable) {
+            String nickname = getMessage();
+            if (nickname == null || nickname.equals("/exit")) {
+                exit();
+            } else if (UserHandler.getInstance().getMap().isEmpty()) {
+                UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname));
+                userAvailable = true;
+            } else {
+                for (String a : UserHandler.getInstance().getMap().keySet()) {
+                    if (a.equals(nickname)) {
+                        pw.println("This user is already exist, choose another");
+                    } else {
+                        UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname));
+                        userAvailable = true;
+                    }
+                }
+            }
+        }
         while (userAvailable) {
             String msg = getMessage();
             if (msg == null || msg.equals("/exit")) {
