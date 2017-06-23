@@ -5,13 +5,13 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.Socket;
-import java.util.Map;
 
 public class Worker implements Runnable {
     private Socket socket;
     private BufferedReader bf;
     private PrintWriter pw;
     private boolean userAvailable;
+    private String nickname;
 
     public Worker(Socket sck) throws IOException {
         this.socket = sck;
@@ -21,21 +21,38 @@ public class Worker implements Runnable {
     }
 
     public void run() {
-        pw.println("Welcome to chat, enter your nickname!");
+        pw.println("Welcome to chat, please login or register");
         while (!userAvailable) {
-            String nickname = getMessage();
+            pw.println("Enter your login (nickname)");
+            nickname = getMessage();
             if (nickname == null || nickname.equals("/exit")) {
                 exit();
-            } else if (UserHandler.getInstance().getMap().isEmpty()) {
-                UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname));
-                userAvailable = true;
             } else {
-                for (String a : UserHandler.getInstance().getMap().keySet()) {
-                    if (a.equals(nickname)) {
-                        pw.println("This user is already exist, choose another");
+                if (UserHandler.getInstance().getMap().keySet().contains(nickname)) {
+                    if (UserHandler.getInstance().getMap().get(nickname).isLoggined()) {
+                        pw.println("You're already logged in");
                     } else {
-                        UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname));
+                        pw.println("Enter your password");
+                        if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
+                            pw.println("Login success");
+                            UserHandler.getInstance().getMap().get(nickname).setLoggined(true);
+                            userAvailable = true;
+                        } else {
+                            pw.println("Login failed, please try again");
+                        }
+                    }
+                } else {
+                    pw.println("Choose your password");
+                    String password = getMessage();
+                    pw.println("Confirm password");
+                    String confirm = getMessage();
+                    if (password.equals(confirm)) {
+                        UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname, password));
+                        pw.println("Registration success");
+                        UserHandler.getInstance().getMap().get(nickname).setLoggined(true);
                         userAvailable = true;
+                    } else {
+                        pw.println("Registration failed, please try again");
                     }
                 }
             }
@@ -45,7 +62,7 @@ public class Worker implements Runnable {
             if (msg == null || msg.equals("/exit")) {
                 exit();
             } else {
-                System.out.println(msg);
+                System.out.println(nickname + ": " + msg);
             }
         }
     }
@@ -60,9 +77,11 @@ public class Worker implements Runnable {
         return message;
     }
 
-
     private void exit() {
         System.out.println("The client left the chat");
+        if (!nickname.equals("/exit")) {
+            UserHandler.getInstance().getMap().get(nickname).setLoggined(false);
+        }
         userAvailable = false;
         try {
             socket.close();
