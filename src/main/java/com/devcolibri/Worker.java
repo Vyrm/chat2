@@ -1,9 +1,6 @@
 package com.devcolibri;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.PrintWriter;
+import java.io.*;
 import java.net.Socket;
 
 public class Worker implements Runnable {
@@ -35,6 +32,7 @@ public class Worker implements Runnable {
                         pw.println("Enter your password");
                         if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
                             pw.println("Login success");
+                            System.out.println(nickname + " is connected");
                             SocketHandler.getInstance().getMap().put(nickname, socket);
                             userAvailable = true;
                         } else {
@@ -49,6 +47,7 @@ public class Worker implements Runnable {
                     if (password.equals(confirm)) {
                         UserHandler.getInstance().getMap().put(nickname, new User(nickname, password));
                         pw.println("Registration success");
+                        System.out.println(nickname + " is connected");
                         SocketHandler.getInstance().getMap().put(nickname, socket);
                         userAvailable = true;
                     } else {
@@ -62,6 +61,7 @@ public class Worker implements Runnable {
             if (msg == null || msg.equals("/exit")) {
                 exit();
             } else {
+                sendMessageToAll(msg);
                 System.out.println(nickname + ": " + msg);
             }
         }
@@ -77,8 +77,22 @@ public class Worker implements Runnable {
         return message;
     }
 
+    private void sendMessageToAll(String msg) {
+        for (String nickname : SocketHandler.getInstance().getMap().keySet()) {
+            if (!nickname.equals(this.nickname)) {
+                try {
+                    PrintWriter write = new PrintWriter(SocketHandler.
+                            getInstance().getMap().get(nickname).getOutputStream(), true);
+                    write.println(this.nickname + ": " + msg);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+
     private void exit() {
-        System.out.println("The client left the chat");
+        System.out.println(nickname + " left the chat");
         if (!nickname.equals("/exit")) {
             SocketHandler.getInstance().getMap().remove(nickname);
         }
