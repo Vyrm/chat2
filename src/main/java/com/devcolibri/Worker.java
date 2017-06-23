@@ -28,14 +28,14 @@ public class Worker implements Runnable {
             if (nickname == null || nickname.equals("/exit")) {
                 exit();
             } else {
-                if (UserHandler.getInstance().getMap().keySet().contains(nickname)) {
-                    if (UserHandler.getInstance().getMap().get(nickname).isLoggined()) {
+                if (UserHandler.getInstance().getMap().get(nickname) != null) {
+                    if (SocketHandler.getInstance().getMap().get(nickname) != null) {
                         pw.println("You're already logged in");
                     } else {
                         pw.println("Enter your password");
                         if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
                             pw.println("Login success");
-                            UserHandler.getInstance().getMap().get(nickname).setLoggined(true);
+                            SocketHandler.getInstance().getMap().put(nickname, socket);
                             userAvailable = true;
                         } else {
                             pw.println("Login failed, please try again");
@@ -47,9 +47,9 @@ public class Worker implements Runnable {
                     pw.println("Confirm password");
                     String confirm = getMessage();
                     if (password.equals(confirm)) {
-                        UserHandler.getInstance().getMap().put(nickname, new User(socket, nickname, password));
+                        UserHandler.getInstance().getMap().put(nickname, new User(nickname, password));
                         pw.println("Registration success");
-                        UserHandler.getInstance().getMap().get(nickname).setLoggined(true);
+                        SocketHandler.getInstance().getMap().put(nickname, socket);
                         userAvailable = true;
                     } else {
                         pw.println("Registration failed, please try again");
@@ -80,7 +80,7 @@ public class Worker implements Runnable {
     private void exit() {
         System.out.println("The client left the chat");
         if (!nickname.equals("/exit")) {
-            UserHandler.getInstance().getMap().get(nickname).setLoggined(false);
+            SocketHandler.getInstance().getMap().remove(nickname);
         }
         userAvailable = false;
         try {

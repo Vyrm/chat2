@@ -1,15 +1,11 @@
 package com.devcolibri;
 
-import java.net.Socket;
-
 public class User {
-    private Socket socket;
     private String nickname;
     private String password;
     private boolean loggined;
 
-    public User(Socket socket, String nickname, String password) {
-        this.socket = socket;
+    public User(String nickname, String password) {
         this.nickname = nickname;
         this.password = password;
         loggined = false;
@@ -19,9 +15,6 @@ public class User {
         return nickname;
     }
 
-    public Socket getSocket() {
-        return socket;
-    }
 
     public String getPassword() {
         return password;
