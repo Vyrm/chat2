@@ -3,29 +3,18 @@ package com.devcolibri;
 public class User {
     private String nickname;
     private String password;
-    private boolean loggined;
 
     public User(String nickname, String password) {
         this.nickname = nickname;
         this.password = password;
-        loggined = false;
     }
 
     public String getNickname() {
         return nickname;
     }
 
-
     public String getPassword() {
         return password;
-    }
-
-    public boolean isLoggined() {
-        return loggined;
-    }
-
-    public void setLoggined(boolean loggined) {
-        this.loggined = loggined;
     }
 
     @Override
