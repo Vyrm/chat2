@@ -26,33 +26,9 @@ public class Worker implements Runnable {
                 exit();
             } else {
                 if (UserHandler.getInstance().getMap().get(nickname) != null) {
-                    if (SocketHandler.getInstance().getMap().get(nickname) != null) {
-                        pw.println("You're already logged in");
-                    } else {
-                        pw.println("Enter your password");
-                        if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
-                            pw.println("Login success");
-                            System.out.println(nickname + " is connected");
-                            SocketHandler.getInstance().getMap().put(nickname, socket);
-                            userAvailable = true;
-                        } else {
-                            pw.println("Login failed, please try again");
-                        }
-                    }
+                    login();
                 } else {
-                    pw.println("Choose your password");
-                    String password = getMessage();
-                    pw.println("Confirm password");
-                    String confirm = getMessage();
-                    if (password.equals(confirm)) {
-                        UserHandler.getInstance().getMap().put(nickname, new User(nickname, password));
-                        pw.println("Registration success");
-                        System.out.println(nickname + " is connected");
-                        SocketHandler.getInstance().getMap().put(nickname, socket);
-                        userAvailable = true;
-                    } else {
-                        pw.println("Registration failed, please try again");
-                    }
+                    registration();
                 }
             }
         }
@@ -87,6 +63,38 @@ public class Worker implements Runnable {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+        }
+    }
+
+    private void registration() {
+        pw.println("Choose your password");
+        String password = getMessage();
+        pw.println("Confirm password");
+        String confirm = getMessage();
+        if (password.equals(confirm)) {
+            UserHandler.getInstance().getMap().put(nickname, new User(nickname, password));
+            pw.println("Registration success");
+            System.out.println(nickname + " is connected");
+            SocketHandler.getInstance().getMap().put(nickname, socket);
+            userAvailable = true;
+        } else {
+            pw.println("Registration failed, please try again");
+        }
+    }
+
+    private void login() {
+        if (SocketHandler.getInstance().getMap().get(nickname) != null) {
+            pw.println("You're already logged in");
+        } else {
+            pw.println("Enter your password");
+            if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
+                pw.println("Login success");
+                System.out.println(nickname + " is connected");
+                SocketHandler.getInstance().getMap().put(nickname, socket);
+                userAvailable = true;
+            } else {
+                pw.println("Login failed, please try again");
             }
         }
     }
