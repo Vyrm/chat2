@@ -1,12 +1,13 @@
-package com.devcolibri;
+package com.devcolibri.service;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
 import java.io.PrintWriter;
-import java.net.Socket;
 
-import com.devcolibri.UserDisconnectedException;
+import com.devcolibri.handler.PrintWriterHandler;
+import com.devcolibri.domain.User;
+import com.devcolibri.exception.UserDisconnectedException;
+import com.devcolibri.handler.UserHandler;
 
 public class AuthorizationService {
 
@@ -43,22 +44,21 @@ public class AuthorizationService {
         }
     }
 
-    private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter) throws IOException, UserDisconnectedException {
+    private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
+        User user = null;
         if (!PrintWriterHandler.getInstance().getMap().containsKey(nickname)) {
             printWriter.println("Enter your password");
-            User user = UserHandler.getInstance().getMap().get(nickname);
-            if (user.getPassword().equals(bufferedReader.readLine())) {
+            user = UserHandler.getInstance().getMap().get(nickname);
+            if (user != null && user.getPassword().equals(bufferedReader.readLine())) {
                 printWriter.println("Login success");
                 System.out.println(nickname + " is connected");
                 PrintWriterHandler.getInstance().getMap().put(nickname, printWriter);
-                return user;
             } else {
                 printWriter.println("Login failed, please try again");
-                return null;
             }
         } else {
             printWriter.println("You're already logged in");
-            throw new UserDisconnectedException();
         }
+        return user;
     }
 }

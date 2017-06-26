@@ -1,4 +1,4 @@
-package com.devcolibri;
+package com.devcolibri.engine;
 
 import com.devcolibri.service.AuthorizationService;
 import com.devcolibri.service.MessageService;

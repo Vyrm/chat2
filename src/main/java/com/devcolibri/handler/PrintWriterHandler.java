@@ -1,4 +1,4 @@
-package com.devcolibri;
+package com.devcolibri.handler;
 
 import java.io.PrintWriter;
 import java.util.HashMap;
@@ -9,7 +9,7 @@ public class PrintWriterHandler {
     private static Map<String, PrintWriter> printWriters;
 
     private PrintWriterHandler() {
-        printWriters = new HashMap<String, PrintWriter>();
+        printWriters = new HashMap<>();
     }
 
     public static PrintWriterHandler getInstance() {

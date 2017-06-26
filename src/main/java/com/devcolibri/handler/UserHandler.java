@@ -1,4 +1,6 @@
-package com.devcolibri;
+package com.devcolibri.handler;
+
+import com.devcolibri.domain.User;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -8,7 +10,7 @@ public class UserHandler {
     private static Map<String, User> clients;
 
     private UserHandler() {
-        clients = new HashMap<String, User>();
+        clients = new HashMap<>();
     }
 
     public static UserHandler getInstance() {

@@ -1,4 +1,4 @@
-package com.devcolibri;
+package com.devcolibri.engine;
 
 import com.devcolibri.domain.User;
 import com.devcolibri.exception.UserDisconnectedException;
@@ -37,11 +37,6 @@ public class Worker implements Runnable {
         }
 
     }
-
-    private void sendMessageToAll(String msg, User user) {
-
-    }
-
 
     private void exit(User user, BufferedReader bufferedReader, PrintWriter printWriter) {
         System.out.println(user.getNickname() + " left the chat");

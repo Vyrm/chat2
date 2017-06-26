@@ -1,4 +1,4 @@
-package com.devcolibri;
+package com.devcolibri.domain;
 
 public class User {
     private String nickname;
