@@ -8,37 +8,27 @@ public class Worker implements Runnable {
     private BufferedReader bf;
     private PrintWriter pw;
     private boolean userAvailable;
-    private String nickname;
+    private User user;
+    private AuthorizationService as;
 
     public Worker(Socket sck) throws IOException {
         this.socket = sck;
         bf = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         pw = new PrintWriter(socket.getOutputStream(), true);
-        userAvailable = false;
+        userAvailable = true;
+        as = new AuthorizationService(socket);
     }
 
     public void run() {
-        pw.println("Welcome to chat, please login or register");
-        while (!userAvailable) {
-            pw.println("Enter your login (nickname)");
-            nickname = getMessage();
-            if (nickname == null || nickname.equals("/exit")) {
-                exit();
-            } else {
-                if (UserHandler.getInstance().getMap().get(nickname) != null) {
-                    login();
-                } else {
-                    registration();
-                }
-            }
-        }
+        user = as.authorize();
+
         while (userAvailable) {
             String msg = getMessage();
             if (msg == null || msg.equals("/exit")) {
                 exit();
             } else {
                 sendMessageToAll(msg);
-                System.out.println(nickname + ": " + msg);
+                System.out.println(user.getNickname() + ": " + msg);
             }
         }
     }
@@ -54,55 +44,18 @@ public class Worker implements Runnable {
     }
 
     private void sendMessageToAll(String msg) {
-        for (String nickname : SocketHandler.getInstance().getMap().keySet()) {
-            if (!nickname.equals(this.nickname)) {
-                try {
-                    PrintWriter write = new PrintWriter(SocketHandler.
-                            getInstance().getMap().get(nickname).getOutputStream(), true);
-                    write.println(this.nickname + ": " + msg);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+        for (String nickname : PrintWriterHandler.getInstance().getMap().keySet()) {
+            if (!nickname.equals(user.getNickname())) {
+                PrintWriterHandler.getInstance().getMap().get(nickname).println(user.getNickname() + ": " + msg);
             }
         }
     }
 
-    private void registration() {
-        pw.println("Choose your password");
-        String password = getMessage();
-        pw.println("Confirm password");
-        String confirm = getMessage();
-        if (password.equals(confirm)) {
-            UserHandler.getInstance().getMap().put(nickname, new User(nickname, password));
-            pw.println("Registration success");
-            System.out.println(nickname + " is connected");
-            SocketHandler.getInstance().getMap().put(nickname, socket);
-            userAvailable = true;
-        } else {
-            pw.println("Registration failed, please try again");
-        }
-    }
-
-    private void login() {
-        if (SocketHandler.getInstance().getMap().get(nickname) != null) {
-            pw.println("You're already logged in");
-        } else {
-            pw.println("Enter your password");
-            if (UserHandler.getInstance().getMap().get(nickname).getPassword().equals(getMessage())) {
-                pw.println("Login success");
-                System.out.println(nickname + " is connected");
-                SocketHandler.getInstance().getMap().put(nickname, socket);
-                userAvailable = true;
-            } else {
-                pw.println("Login failed, please try again");
-            }
-        }
-    }
 
     private void exit() {
-        System.out.println(nickname + " left the chat");
-        if (!nickname.equals("/exit")) {
-            SocketHandler.getInstance().getMap().remove(nickname);
+        System.out.println(user.getNickname() + " left the chat");
+        if (!user.getNickname().equals("/exit")) {
+            PrintWriterHandler.getInstance().getMap().remove(user.getNickname());
         }
         userAvailable = false;
         try {
