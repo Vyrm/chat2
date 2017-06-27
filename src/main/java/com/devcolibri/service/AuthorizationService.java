@@ -26,7 +26,7 @@ public class AuthorizationService {
             printWriter.println("Enter your login (nickname)");
             String nickname = bufferedReader.readLine();
             if (nickname != null && !nickname.equals("/exit")) {
-                user = userHandler.getMap().containsKey(nickname) ? login(nickname, bufferedReader,
+                user = userHandler.getUser(nickname) != null ? login(nickname, bufferedReader,
                         printWriter) : registration(nickname, bufferedReader, printWriter);
             } else {
                 throw new UserDisconnectedException();
@@ -43,7 +43,7 @@ public class AuthorizationService {
         String confirm = bufferedReader.readLine();
         if (password.equals(confirm)) {
             User user = new User(nickname, password);
-            userHandler.getMap().put(nickname, user);
+            userHandler.addUser(nickname, password);
             printWriter.println("Registration success");
             System.out.println(nickname + " is connected");
             printWriterHandler.getMap().put(nickname, printWriter);
@@ -59,7 +59,7 @@ public class AuthorizationService {
         User user = null;
         if (!printWriterHandler.getMap().containsKey(nickname)) {
             printWriter.println("Enter your password");
-            user = userHandler.getMap().get(nickname);
+            user = userHandler.getUser(nickname);
             if (user != null && user.getPassword().equals(bufferedReader.readLine())) {
                 printWriter.println("Login success");
                 System.out.println(nickname + " is connected");

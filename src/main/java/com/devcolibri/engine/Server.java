@@ -8,10 +8,11 @@ import com.devcolibri.service.MessageService;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.sql.SQLException;
 
 public class Server {
 
-    public void run() throws IOException {
+    public void run() throws IOException, SQLException {
         System.out.println("Server is working!");
         ServerSocket serverSocket = new ServerSocket(8081);
         UserHandler userHandler = new UserHandler();
