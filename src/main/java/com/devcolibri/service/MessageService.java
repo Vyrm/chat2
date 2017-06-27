@@ -33,6 +33,7 @@ public class MessageService {
             if (!nickname.equals(excludedUser.getNickname())) {
                 printWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
                         + " left the chat.");
+                printWriterHandler.getMap().remove(excludedUser.getNickname());
             }
         }
     }

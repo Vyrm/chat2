@@ -21,7 +21,7 @@ public class Server {
 
         while (true) {
             Socket socket = serverSocket.accept();
-            Worker worker = new Worker(socket, authorizationService, messageService, printWriterHandler);
+            Worker worker = new Worker(socket, authorizationService, messageService);
             new Thread(worker).start();
         }
     }

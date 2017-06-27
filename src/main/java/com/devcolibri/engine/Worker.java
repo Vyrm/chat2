@@ -2,7 +2,6 @@ package com.devcolibri.engine;
 
 import com.devcolibri.domain.User;
 import com.devcolibri.exception.UserDisconnectedException;
-import com.devcolibri.handler.PrintWriterHandler;
 import com.devcolibri.service.AuthorizationService;
 import com.devcolibri.service.MessageService;
 
@@ -13,14 +12,11 @@ public class Worker implements Runnable {
     private Socket socket;
     private MessageService messageService;
     private AuthorizationService authorizationService;
-    private PrintWriterHandler printWriterHandler;
 
-    public Worker(Socket socket, AuthorizationService authorizationService, MessageService messageService,
-                  PrintWriterHandler printWriterHandler) {
+    public Worker(Socket socket, AuthorizationService authorizationService, MessageService messageService) {
         this.socket = socket;
         this.messageService = messageService;
         this.authorizationService = authorizationService;
-        this.printWriterHandler = printWriterHandler;
     }
 
     public void run() {
@@ -51,7 +47,6 @@ public class Worker implements Runnable {
         } else if (!user.getNickname().equals("/exit")) {
             System.out.println(user.getNickname() + " left the chat");
             messageService.sendUserExit(user);
-            printWriterHandler.getMap().remove(user.getNickname());
         }
         try {
             socket.close();
