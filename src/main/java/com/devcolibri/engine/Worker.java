@@ -48,7 +48,7 @@ public class Worker implements Runnable {
         } else if (!user.getNickname().equals("/exit")) {
             System.out.println(user.getNickname() + " left the chat");
             messageService.sendUserExit(user);
-            PrintWriterHandler.getInstance().getMap().remove(user.getNickname());
+            PrintWriterHandler.getMap().remove(user.getNickname());
         }
         try {
             socket.close();

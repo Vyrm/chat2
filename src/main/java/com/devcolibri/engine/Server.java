@@ -1,5 +1,7 @@
 package com.devcolibri.engine;
 
+import com.devcolibri.handler.PrintWriterHandler;
+import com.devcolibri.handler.UserHandler;
 import com.devcolibri.service.AuthorizationService;
 import com.devcolibri.service.MessageService;
 
@@ -7,7 +9,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Server {
+public class    Server {
     private ServerSocket serverSocket;
     private Socket socket;
 
@@ -15,8 +17,11 @@ public class Server {
 
         System.out.println("Server is working!");
         serverSocket = new ServerSocket(8081);
-        AuthorizationService authorizationService = new AuthorizationService();
-        MessageService messageService = new MessageService();
+        UserHandler userHandler = new UserHandler();
+        PrintWriterHandler printWriterHandler = new PrintWriterHandler();
+        AuthorizationService authorizationService = new AuthorizationService(userHandler, printWriterHandler);
+        MessageService messageService = new MessageService(printWriterHandler);
+
         while (true) {
             socket = serverSocket.accept();
             Worker worker = new Worker(socket, authorizationService, messageService);

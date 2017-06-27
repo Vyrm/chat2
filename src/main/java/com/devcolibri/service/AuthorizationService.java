@@ -10,6 +10,13 @@ import com.devcolibri.exception.UserDisconnectedException;
 import com.devcolibri.handler.UserHandler;
 
 public class AuthorizationService {
+    private UserHandler userHandler;
+    private PrintWriterHandler printWriterHandler;
+
+    public AuthorizationService(UserHandler userHandler, PrintWriterHandler printWriterHandler) {
+        this.userHandler = userHandler;
+        this.printWriterHandler = printWriterHandler;
+    }
 
     public User authorize(BufferedReader bufferedReader, PrintWriter printWriter)
             throws IOException, UserDisconnectedException {
@@ -19,7 +26,7 @@ public class AuthorizationService {
             printWriter.println("Enter your login (nickname)");
             String nickname = bufferedReader.readLine();
             if (nickname != null && !nickname.equals("/exit")) {
-                user = UserHandler.getInstance().getMap().containsKey(nickname) ? login(nickname, bufferedReader,
+                user = UserHandler.getMap().containsKey(nickname) ? login(nickname, bufferedReader,
                         printWriter) : registration(nickname, bufferedReader, printWriter);
             } else {
                 throw new UserDisconnectedException();
@@ -36,10 +43,10 @@ public class AuthorizationService {
         String confirm = bufferedReader.readLine();
         if (password.equals(confirm)) {
             User user = new User(nickname, password);
-            UserHandler.getInstance().getMap().put(nickname, user);
+            UserHandler.getMap().put(nickname, user);
             printWriter.println("Registration success");
             System.out.println(nickname + " is connected");
-            PrintWriterHandler.getInstance().getMap().put(nickname, printWriter);
+            PrintWriterHandler.getMap().put(nickname, printWriter);
             return user;
         } else {
             printWriter.println("Registration failed, please try again");
@@ -50,13 +57,13 @@ public class AuthorizationService {
     private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter)
             throws IOException {
         User user = null;
-        if (!PrintWriterHandler.getInstance().getMap().containsKey(nickname)) {
+        if (!PrintWriterHandler.getMap().containsKey(nickname)) {
             printWriter.println("Enter your password");
-            user = UserHandler.getInstance().getMap().get(nickname);
+            user = UserHandler.getMap().get(nickname);
             if (user != null && user.getPassword().equals(bufferedReader.readLine())) {
                 printWriter.println("Login success");
                 System.out.println(nickname + " is connected");
-                PrintWriterHandler.getInstance().getMap().put(nickname, printWriter);
+                PrintWriterHandler.getMap().put(nickname, printWriter);
             } else {
                 printWriter.println("Login failed, please try again");
             }
