@@ -28,6 +28,7 @@ public class Worker implements Runnable {
             bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
             printWriter = new PrintWriter(socket.getOutputStream(), true);
             user = authorizationService.authorize(bufferedReader, printWriter);
+            messageService.sendUserLogin(user);
             String message = bufferedReader.readLine();
             while (message != null && !message.equals("/exit")) {
                 messageService.send(message, user);
@@ -46,6 +47,7 @@ public class Worker implements Runnable {
             System.out.println("Client left the chat");
         } else if (!user.getNickname().equals("/exit")) {
             System.out.println(user.getNickname() + " left the chat");
+            messageService.sendUserExit(user);
             PrintWriterHandler.getInstance().getMap().remove(user.getNickname());
         }
         try {
