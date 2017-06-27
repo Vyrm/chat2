@@ -13,11 +13,14 @@ public class Worker implements Runnable {
     private Socket socket;
     private MessageService messageService;
     private AuthorizationService authorizationService;
+    private PrintWriterHandler printWriterHandler;
 
-    public Worker(Socket socket, AuthorizationService authorizationService, MessageService messageService) {
+    public Worker(Socket socket, AuthorizationService authorizationService, MessageService messageService,
+                  PrintWriterHandler printWriterHandler) {
         this.socket = socket;
         this.messageService = messageService;
         this.authorizationService = authorizationService;
+        this.printWriterHandler = printWriterHandler;
     }
 
     public void run() {
@@ -48,7 +51,7 @@ public class Worker implements Runnable {
         } else if (!user.getNickname().equals("/exit")) {
             System.out.println(user.getNickname() + " left the chat");
             messageService.sendUserExit(user);
-            PrintWriterHandler.getMap().remove(user.getNickname());
+            printWriterHandler.getMap().remove(user.getNickname());
         }
         try {
             socket.close();

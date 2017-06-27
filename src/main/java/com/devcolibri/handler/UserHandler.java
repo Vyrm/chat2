@@ -2,18 +2,17 @@ package com.devcolibri.handler;
 
 import com.devcolibri.domain.User;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class UserHandler {
 
-    private static Map<String, User> clients;
+    private ConcurrentHashMap<String, User> clients;
 
     public UserHandler() {
-        clients = new HashMap<>();
+        clients = new ConcurrentHashMap<>();
     }
 
-    public static Map<String, User> getMap() {
+    public ConcurrentHashMap<String, User> getMap() {
         return clients;
     }
 }

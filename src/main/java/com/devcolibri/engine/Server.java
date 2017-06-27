@@ -9,22 +9,19 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class    Server {
-    private ServerSocket serverSocket;
-    private Socket socket;
+public class Server {
 
     public void run() throws IOException {
-
         System.out.println("Server is working!");
-        serverSocket = new ServerSocket(8081);
+        ServerSocket serverSocket = new ServerSocket(8081);
         UserHandler userHandler = new UserHandler();
         PrintWriterHandler printWriterHandler = new PrintWriterHandler();
         AuthorizationService authorizationService = new AuthorizationService(userHandler, printWriterHandler);
         MessageService messageService = new MessageService(printWriterHandler);
 
         while (true) {
-            socket = serverSocket.accept();
-            Worker worker = new Worker(socket, authorizationService, messageService);
+            Socket socket = serverSocket.accept();
+            Worker worker = new Worker(socket, authorizationService, messageService, printWriterHandler);
             new Thread(worker).start();
         }
     }

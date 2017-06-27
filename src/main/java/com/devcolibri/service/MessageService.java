@@ -11,27 +11,27 @@ public class MessageService {
     }
 
     public void send(String message, User excludedUser) {
-        for (String nickname : PrintWriterHandler.getMap().keySet()) {
+        for (String nickname : printWriterHandler.getMap().keySet()) {
             if (!nickname.equals(excludedUser.getNickname())) {
-                PrintWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
+                printWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
                         + ": " + message);
             }
         }
     }
 
     public void sendUserLogin(User excludedUser) {
-        for (String nickname : PrintWriterHandler.getMap().keySet()) {
+        for (String nickname : printWriterHandler.getMap().keySet()) {
             if (!nickname.equals(excludedUser.getNickname())) {
-                PrintWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
+                printWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
                         + " is connected.");
             }
         }
     }
 
     public void sendUserExit(User excludedUser) {
-        for (String nickname : PrintWriterHandler.getMap().keySet()) {
+        for (String nickname : printWriterHandler.getMap().keySet()) {
             if (!nickname.equals(excludedUser.getNickname())) {
-                PrintWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
+                printWriterHandler.getMap().get(nickname).println(excludedUser.getNickname()
                         + " left the chat.");
             }
         }

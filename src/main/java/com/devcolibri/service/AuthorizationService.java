@@ -26,7 +26,7 @@ public class AuthorizationService {
             printWriter.println("Enter your login (nickname)");
             String nickname = bufferedReader.readLine();
             if (nickname != null && !nickname.equals("/exit")) {
-                user = UserHandler.getMap().containsKey(nickname) ? login(nickname, bufferedReader,
+                user = userHandler.getMap().containsKey(nickname) ? login(nickname, bufferedReader,
                         printWriter) : registration(nickname, bufferedReader, printWriter);
             } else {
                 throw new UserDisconnectedException();
@@ -43,10 +43,10 @@ public class AuthorizationService {
         String confirm = bufferedReader.readLine();
         if (password.equals(confirm)) {
             User user = new User(nickname, password);
-            UserHandler.getMap().put(nickname, user);
+            userHandler.getMap().put(nickname, user);
             printWriter.println("Registration success");
             System.out.println(nickname + " is connected");
-            PrintWriterHandler.getMap().put(nickname, printWriter);
+            printWriterHandler.getMap().put(nickname, printWriter);
             return user;
         } else {
             printWriter.println("Registration failed, please try again");
@@ -57,13 +57,13 @@ public class AuthorizationService {
     private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter)
             throws IOException {
         User user = null;
-        if (!PrintWriterHandler.getMap().containsKey(nickname)) {
+        if (!printWriterHandler.getMap().containsKey(nickname)) {
             printWriter.println("Enter your password");
-            user = UserHandler.getMap().get(nickname);
+            user = userHandler.getMap().get(nickname);
             if (user != null && user.getPassword().equals(bufferedReader.readLine())) {
                 printWriter.println("Login success");
                 System.out.println(nickname + " is connected");
-                PrintWriterHandler.getMap().put(nickname, printWriter);
+                printWriterHandler.getMap().put(nickname, printWriter);
             } else {
                 printWriter.println("Login failed, please try again");
             }
