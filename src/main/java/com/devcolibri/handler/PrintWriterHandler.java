@@ -1,31 +1,16 @@
 package com.devcolibri.handler;
 
 import java.io.PrintWriter;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class PrintWriterHandler {
-    private static volatile PrintWriterHandler printWriterHandler;
-    private static Map<String, PrintWriter> printWriters;
+    private ConcurrentHashMap<String, PrintWriter> printWriters;
 
-    private PrintWriterHandler() {
-        printWriters = new HashMap<>();
+    public PrintWriterHandler() {
+        printWriters = new ConcurrentHashMap<>();
     }
 
-    public static PrintWriterHandler getInstance() {
-        if (printWriterHandler == null) {
-            synchronized (PrintWriterHandler.class) {
-                if (printWriterHandler == null) {
-                    printWriterHandler = new PrintWriterHandler();
-                }
-            }
-        }
-
-        return printWriterHandler;
-    }
-
-    public Map<String, PrintWriter> getMap() {
+    public ConcurrentHashMap<String, PrintWriter> getMap() {
         return printWriters;
     }
 }
-
