@@ -21,10 +21,13 @@ public class Worker implements Runnable {
     }
 
     public void run() {
+        User user = null;
+        BufferedReader bufferedReader = null;
+        PrintWriter printWriter = null;
         try {
-            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-            PrintWriter printWriter = new PrintWriter(socket.getOutputStream(), true);
-            User user = authorizationService.authorize(bufferedReader, printWriter);
+            bufferedReader = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+            printWriter = new PrintWriter(socket.getOutputStream(), true);
+            user = authorizationService.authorize(bufferedReader, printWriter);
             String message = bufferedReader.readLine();
             while (message != null && !message.equals("/exit")) {
                 messageService.send(message, user);
@@ -33,14 +36,16 @@ public class Worker implements Runnable {
             }
             exit(user, bufferedReader, printWriter);
         } catch (IOException | UserDisconnectedException e) {
-            // TODO: 26.06.2017
+            exit(user, bufferedReader, printWriter);
         }
 
     }
 
     private void exit(User user, BufferedReader bufferedReader, PrintWriter printWriter) {
-        System.out.println(user.getNickname() + " left the chat");
-        if (!user.getNickname().equals("/exit")) {
+        if (user == null) {
+            System.out.println("Client left the chat");
+        } else if (!user.getNickname().equals("/exit")) {
+            System.out.println(user.getNickname() + " left the chat");
             PrintWriterHandler.getInstance().getMap().remove(user.getNickname());
         }
         try {

@@ -11,22 +11,25 @@ import com.devcolibri.handler.UserHandler;
 
 public class AuthorizationService {
 
-    public User authorize(BufferedReader bufferedReader, PrintWriter printWriter) throws IOException, UserDisconnectedException{
+    public User authorize(BufferedReader bufferedReader, PrintWriter printWriter)
+            throws IOException, UserDisconnectedException {
         User user = null;
         printWriter.println("Welcome to chat, please login or register");
         while (user == null) {
             printWriter.println("Enter your login (nickname)");
             String nickname = bufferedReader.readLine();
             if (nickname != null && !nickname.equals("/exit")) {
-                user = UserHandler.getInstance().getMap().containsKey(nickname) ? login(nickname, bufferedReader, printWriter) : registration(nickname, bufferedReader, printWriter);
+                user = UserHandler.getInstance().getMap().containsKey(nickname) ? login(nickname, bufferedReader,
+                        printWriter) : registration(nickname, bufferedReader, printWriter);
             } else {
                 throw new UserDisconnectedException();
-            }     
+            }
         }
         return user;
     }
 
-    private User registration(String nickname, BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
+    private User registration(String nickname, BufferedReader bufferedReader, PrintWriter printWriter)
+            throws IOException {
         printWriter.println("Choose your password");
         String password = bufferedReader.readLine();
         printWriter.println("Confirm password");
@@ -44,7 +47,8 @@ public class AuthorizationService {
         }
     }
 
-    private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter) throws IOException {
+    private User login(String nickname, BufferedReader bufferedReader, PrintWriter printWriter)
+            throws IOException {
         User user = null;
         if (!PrintWriterHandler.getInstance().getMap().containsKey(nickname)) {
             printWriter.println("Enter your password");
